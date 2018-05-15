@@ -1,9 +1,12 @@
 'use strict';
+
 const https = require('https');
 
-module.exports = function gist(files, options = { public: true, description: '' }) {
+const accessToken = "oauth2authtoken"
+
+module.exports = function gist(files, options = { public: false, description: 'Overflow Output:' }) {
   return new Promise((resolve, reject) => {
-    if (typeof files === 'string') files = { 'default': {'content': files} };
+    if (typeof files === 'string') files = { 'overflow.hs': {'content': files} };
     if (Array.isArray(files)) {
       const final = {};
       for (const file of files) final[file.name] = { content: file.content };
@@ -22,7 +25,8 @@ module.exports = function gist(files, options = { public: true, description: '' 
       path: '/gists',
       method: 'POST',
       headers: {
-        'User-Agent': 'node-gist',
+        'Authorization': 'token ' + accessToken,
+        'User-Agent': 'SaroGist Discord/Overflow',
         'Content-Type': 'application/json'
       }
     }, (res) => {
